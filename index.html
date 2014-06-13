@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Highcharts图表插件之：拖拽数据点改变数据值然后更新至数据库进行保存</title>
+    <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <script src="js/highcharts.js"></script>
+    <script src="js/highcharts-more.js"></script>
+    <script src="js/toolbox.js"></script>
+    <script type='text/javascript'>
+        Highcharts.setOptions({
+            lang: {
+                numericSymbols: null // 不换算单位
+            }
+        });
+
+        var yCount = 1;
+        var isLeft = false;
+
+        $(function () {
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container',
+                    animation: false
+                },
+                title: {
+                    text: "手动拖拽数据点改变站点月IP数据后更新至数据库"
+                },
+                subtitle: {
+                    text: "From:http://www.stepday.com"
+                },
+                xAxis: {
+                    categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                },
+                yAxis: {
+                    title: {
+                        text: "IP"
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    enabled: true //禁用提示框
+                },
+                credits: {
+                    text: "www.stepday.com",
+                    href: "http://www.stepday.com",
+                    style: {
+                        color: "red"
+                    }
+                },
+                series: [{
+                    name: "stepday",
+                    type: "spline",
+                    data: [51538, 62897, 72502, 58426, 57398, 62010, 82342, 45381, 69520, 55328, 72603, 35872]
+                }],
+                //图表工具箱
+                toolbox: {
+                    enabled: true, //是否启用工具箱
+                    buttons: [{
+                        enabled: true, //是否启用
+                        //text: "刷新图表",
+                        title: "刷新图表数据", //按钮提示信息
+                        onclick: function () {
+                            this.redraw(true); //重画
+                        },
+                        symbol: "url(images/refresh.gif)" //设置图标
+                    }, {
+                        enabled: true,
+                        //text: "新增数据",
+                        title: "新增Series数据",
+                        onclick: function () {
+                            debugger
+                            this.addSeries({
+                                type: "column",
+                                yAxis: isLeft ? 0 : yCount - 1,
+                                data: [21538, 32897, 32502, 48426, 27398, 42010, 52342, 55381, 39520, 25328, 12603, 45872]
+                            });
+                            isLeft = !isLeft;
+                        },
+                        symbol: "url(images/add.gif)"
+                    }, {
+                        enabled: true,
+                        //text: "新增Y轴",
+                        title: "新增Y轴",
+                        onclick: function () {
+                            this.addAxis({
+                                labels: {
+                                    formatter: function () {
+                                        return this.value + '°C';
+                                    },
+                                    style: {
+                                        color: '#89A54E'
+                                    }
+                                },
+                                title: {
+                                    text: "新增Y轴" + yCount.toString()
+                                },
+                                opposite: true//坐标轴显示在右侧
+                            }, false, true, true);
+
+                            yCount++;
+                        },
+                        symbol: "url(images/add.gif)"
+                    }, {
+                        title: "下载图表",
+                        onclick: function () {
+                            alert("这里可以填充下载图表的代码");
+                        },
+                        symbol: "url(images/down.gif)"
+                    }]
+                }
+            }, function (chart) {
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="container" style="height: 400px; width: 600px;">
+    </div>
+</body>
+</html>
